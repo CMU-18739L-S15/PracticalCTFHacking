@@ -1,0 +1,156 @@
+#+TITLE: Practical CTF Hacking
+#+AUTHOR: David Brumley and the 18739L Spring 2015 Class
+
+
+* Tasks
+** DONE Write outline
+** TODO Figure out title page setup
+** DONE Figure out how to do code blocks in babel mode
+First, customize the variable org-babel-load-languages, save, and then
+you can work as normal
+
+** DONE Find out how to run a web browser in emacs
+You can do this with eww
+
+** TODO Figure out how to get org-beautify-theme to load
+
+
+* Introduction
+This book covers the practical tools, tips, and references for CTF
+hacking contests.  This book is the product of the Spring 2015 18739L
+class at Carnegie Mellon University.
+
+** Audience and Assumptions
+In this book we assume you already have a working knowledge of:
+1. UNIX and the command line.  Personally years ago I learned reading
+   [[http://www.amazon.com/Sams-Teach-Yourself-Hours-Edition/dp/0672328143][UNIX in 24 hours]].
+2. The C Programming Language. 
+3. Compilation and basic debugging of compiled programs on x86.  We
+   call compilied programs "binaries".  At CMU, we require most
+   students to take [[http://www.cs.cmu.edu/~213/][Introduction to Computer Systems]].  As part of that
+   course, students read [[http://csapp.cs.cmu.edu/][Computer Systems:A Programmers Perspective]].
+   I *highly* recommend this book.  In particular, you should be an
+   expert in material at least up to Chapter 3.  In particular, I
+   assume you know the GNU debugger ~gdb~, and the ~objdump~ utility.
+4. You have access to a UNIX system. For example, you can rent a server for
+   $5/month at [[http://digitalocean.com][Digital Ocean]], or you can install a virtual machine,
+   e.g., via [[http://vagrantup.com/][vagrant]].
+5. Some python experience.  I've found that really good CTF hackers
+   are also typically very experienced with python. You can use
+   [[http://learnpythonthehardway.org/][Learn Python the Hard Way]] as a good introduction. 
+6. Of course, the ability to use vi or vim. 
+
+In addition, I assume you have what I call the "hacker spirit", where
+you can do self-directed exploration of a subject.  If you are the
+type of person who needs an instructor to point you to the next thing
+to learn, then computer security is probably not the right field for
+you.
+
+
+** How this e-book was written
+This e-book is mostly written and edited in [[https://www.gnu.org/software/emacs/][emacs]] [[http://orgmode.org/][org-mode]].  This is
+my first time using org-mode for a book.  Most of the links and tools
+were provided by students in the [[http://www.cmu.edu][18-739L]] course in Spring 2015.  
+
+* Binary Exploitation
+** Learning
+
+
+** Tools
+*** use pwntools to set up connection
+Reliability in connections. 
+
+*** peda
+Super useful. Highlights disassembly. searchmem is useful for
+searching for your input string.  checksec also checks general
+security properties of the executable. 
+*** shellcraft
+
+** Useful shell commands
+While we assume basic UNIX experience, there are unique CTF-specific
+tasks often crop up. This is grab-bag of such tricks and tips.  We use
+the program named `ctf` to stand in for any CTF program.
+
+*** Providing command-generated input
+Suppose you want to provide a long input to a program. We can use our
+one-liners from above to generate the input, and use the modern shell
+feature of using ~(<cmd>)~. 
+
+For example, the following command will run ~python~ in a subshell
+with a small one-liner  that prints 40 ~A~ characters in a row.
+
+#+NAME: print40
+#+begin_src sh
+echo $(python -c 'print "A"*40')
+#+end_src
+
+The results are:
+
+#+RESULTS: print40
+: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+Of course you can run any unix command.  The following echos ~/bin/ls~
+to ~objdump~, which then pipes to ~head~ to print the first 5 results:
+
+#+name: objdumpls
+#+begin_src sh
+objdump -D $(echo /bin/ls) | head -5
+#+end_src
+
+#+results: objdumpls
+|             |      |         |               |
+| /bin/ls:    | file | format  | mach-o-x86-64 |
+|             |      |         |               |
+|             |      |         |               |
+| Disassembly | of   | section | .text:        |
+
+Another (and older) method is to use backticks:
+
+#+name: backtick40
+#+begin_src sh
+echo `python -c 'print "B"*40'`
+#+end_src
+
+The results are:
+#+results: backtick40
+: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+Using the ~(<cmd>)~ syntax is newer and the recommended method for
+invoking a command. The backticks have been deprecated in favor of ~$()~
+for command substitution because $() can easily nest within itself as
+in ~$(echo foo$(echo bar))~. There are also minor differences such as
+how backslashes are parsed in the backtick version[fn:1].
+
+[fn:1] See [[http://stackoverflow.com/questions/4708549/shell-programming-whats-the-difference-between-command-and-command][Shell Programming: What's the difference between $(command) and `command`]]
+
+
+** Python one-liners
+1. tjis is an item
+
+* Web Exploitation
+** Learning
+** Tools
+** Useful shell commands
+** Python one-liners
+
+* Forensics
+** Papers
+** Tools
+** Useful shell commands
+** Python one-liners
+
+* Cryptography
+** Learning
+** Tools
+
+*** SAGE
+SAGE.  Nice example is rsa picoctf problem.  tjbecker has the example.
+(need to implement your own gcd)
+
+
+** Useful shell commands
+** Python one-liners
+
+
+
+atm: 
