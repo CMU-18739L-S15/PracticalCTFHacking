@@ -17,54 +17,80 @@ You can do this with eww
 
 * Introduction
 This book covers the practical tools, tips, and references for CTF
-hacking contests.  This book is the product of the Spring 2015 18739L
-class at Carnegie Mellon University.
+hacking contests.  I assume you have what I call the "hacker spirit",
+where you can do self-directed exploration of a subject.  If you are
+the type of person who needs an instructor to point you to the next
+thing to learn, then computer security is probably not the right field
+for you.
+
 
 ** Audience and Assumptions
 In this book we assume you already have a working knowledge of:
 1. UNIX and the command line.  Personally years ago I learned reading
    [[http://www.amazon.com/Sams-Teach-Yourself-Hours-Edition/dp/0672328143][UNIX in 24 hours]].
-2. The C Programming Language. 
-3. Compilation and basic debugging of compiled programs on x86.  We
+2. You have access to a UNIX system. For example, you can rent a server for
+   $5/month at [[http://digitalocean.com][Digital Ocean]], or you can install a virtual machine,
+   e.g., via [[http://vagrantup.com/][vagrant]].
+3. The ability to use a UNIX text editor. Some get by on =nano=, I
+   recommend learning =vim= as well.  (Real programmers know =emacs=;
+   consider learning it eventually.)
+4. Some python experience.  I've found that really good CTF hackers
+   are also typically very experienced with python. You can use
+   [[http://learnpythonthehardway.org/][Learn Python the Hard Way]] as a good introduction. 
+
+In addition, to solve many reversing and binary exploitation
+challenges you must know:
+5. The C Programming Language. (Note: C++ is a related, but different
+   language. I recommend C).  I do not have any experience
+   recommending books. One possibility is the [[https://en.wikibooks.org/wiki/A_Little_C_Primer][free wikibooks Little C Primer]].
+6. Compilation and basic debugging of compiled programs on x86.  We
    call compilied programs "binaries".  At CMU, we require most
    students to take [[http://www.cs.cmu.edu/~213/][Introduction to Computer Systems]].  As part of that
    course, students read [[http://csapp.cs.cmu.edu/][Computer Systems:A Programmers Perspective]].
    I *highly* recommend this book.  In particular, you should be an
    expert in material at least up to Chapter 3.  In particular, I
    assume you know the GNU debugger ~gdb~, and the ~objdump~ utility.
-4. You have access to a UNIX system. For example, you can rent a server for
-   $5/month at [[http://digitalocean.com][Digital Ocean]], or you can install a virtual machine,
-   e.g., via [[http://vagrantup.com/][vagrant]].
-5. Some python experience.  I've found that really good CTF hackers
-   are also typically very experienced with python. You can use
-   [[http://learnpythonthehardway.org/][Learn Python the Hard Way]] as a good introduction. 
-6. Of course, the ability to use vi or vim. 
 
-In addition, I assume you have what I call the "hacker spirit", where
-you can do self-directed exploration of a subject.  If you are the
-type of person who needs an instructor to point you to the next thing
-to learn, then computer security is probably not the right field for
-you.
+** Credits
+This book is the product of the Spring 2015 18739L class at Carnegie
+Mellon University.
 
-
-** How this e-book was written
 This e-book is mostly written and edited in [[https://www.gnu.org/software/emacs/][emacs]] [[http://orgmode.org/][org-mode]].  This is
 my first time using org-mode for a book.  Most of the links and tools
 were provided by students in the [[http://www.cmu.edu][18-739L]] course in Spring 2015.  
 
 * Binary Exploitation
 ** Learning
-
-
 ** Tools
-*** use pwntools to set up connection
-Reliability in connections. 
-
+*** gdb
 *** peda
-Super useful. Highlights disassembly. searchmem is useful for
+[[https://github.com/longld/peda][peda]] is a GDB plugin that provides enhanced UI and python integration.
+Highlights disassembly. searchmem is useful for
 searching for your input string.  checksec also checks general
 security properties of the executable. 
+
+*** IDA Pro
+[[https://www.hex-rays.com/products/ida/][IDA Pro]] is the DE factor standard tool for navigating binaries.  The
+free version is adequate for most needs.  You should get use to
+solving problems without the decompiler plugin.  The full decompiler
+is nice, but don't make it a crutch.
+
+The most common tasks, by shortcut, are:
+  - =x= to see what calls a function.
+  - =n= to rename (usually to something memorable)
+
+Spending a few days with the [[http://www.amazon.com/The-IDA-Pro-Book-Disassembler/dp/1593272898][IDA Pro book]] is worthwhile, especially
+Section 2 on basic IDA usage.  
+
+*** use pwntools to set up connection
+Reliability in connections. 
 *** shellcraft
+
+*** fuzzers
+Fuzzers tend to have less value in CTF problems that real world
+security scenarios.   However, it is still useful to know how to
+fuzz.  In practice, =zzuf= and =afl-fuzz= tend to be the most popular
+currently for quick, black-box fuzzing.
 
 ** Useful shell commands
 While we assume basic UNIX experience, there are unique CTF-specific
@@ -123,9 +149,14 @@ how backslashes are parsed in the backtick version[fn:1].
 
 [fn:1] See [[http://stackoverflow.com/questions/4708549/shell-programming-whats-the-difference-between-command-and-command][Shell Programming: What's the difference between $(command) and `command`]]
 
-
 ** Python one-liners
 1. tjis is an item
+
+** Random things
+*** Analyzing binaries when you don't have read permissions
+On level 13 of IO, you are not given read access to the binary. The
+trick here is to use =ptrace=. =ptrace= allows a parent process to
+step through a child.  You can also use =xobinary= potentially.
 
 * Web Exploitation
 ** Learning
